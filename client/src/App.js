@@ -12,11 +12,26 @@ function App() {
 
   useEffect(() => {
     socketRef.current = socketIOClient.connect(host)
+
+    socketRef.current.on("server-set-id", ({ id }) => {
+      setId(id)
+    })
+
+    socketRef.current.on("server-send-data", dataGot => {
+      console.log({ dataGot })
+    })
   }, []);
+
+  function sendData() {
+    socketRef.current.emit("client-send-data", "tu test")
+  }
 
 
   return (
-    <></>
+    <>
+      <div>{id}</div>
+      <button onClick={sendData}>TEST</button>
+    </>
   );
 }
 
