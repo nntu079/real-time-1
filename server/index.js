@@ -12,15 +12,12 @@ const socketIo = require("socket.io")(server, {
 
 
 socketIo.on("connection", (socket) => { ///Handle khi có connect từ client tới
-    console.log("New client connected" + socket.id);
 
-    socket.on("sendDataClient", function (data) { // Handle khi có sự kiện tên là sendDataClient từ phía client
-        socketIo.emit("sendDataServer", { data });// phát sự kiện  có tên sendDataServer cùng với dữ liệu tin nhắn từ phía server
+    socket.emit('server-set-id', { id: socket.id })
+
+    socket.on("client-send-data", function (data) { // Handle khi có sự kiện tên là sendDataClient từ phía client
+        socketIo.emit("server-send-data", { data, from: socket.id });// phát sự kiện  có tên sendDataServer cùng với dữ liệu tin nhắn từ phía server
     })
-
-    socket.on("disconnect", () => {
-        console.log("Client disconnected"); // Khi client disconnect thì log ra terminal.
-    });
 });
 
 server.listen(3000, () => {
